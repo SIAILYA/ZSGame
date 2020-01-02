@@ -21,7 +21,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.y = player_y
         self.rect.x = player_x
-        # TODO сделать одинаковую скорость пуль
+        # TODO сделать одинаковую скорость пуль!
         self.speed_x = (self.rect.x - x) / time
         self.speed_y = (self.rect.y - y) / time
 
