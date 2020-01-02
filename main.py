@@ -71,3 +71,4 @@ while running:
     clock.tick(120)
 pygame.quit()
 # ИЛЬЯ ПРИВЕТ
+# АГА!!!
