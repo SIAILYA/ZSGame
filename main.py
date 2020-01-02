@@ -2,6 +2,7 @@ from Players import Hero, Bullet
 import pygame
 from pygame import *
 
+# Привет Филип
 pygame.init()
 size = width, height = 1366 // 2, 768 // 2
 screen = pygame.display.set_mode(size, pygame.RESIZABLE)
