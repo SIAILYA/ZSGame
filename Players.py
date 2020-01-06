@@ -35,7 +35,7 @@ class Zombie(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.hp = 2
+        self.hp = 3
 
     def update(self, hero_cords, bullets):
         if hero_cords[0] > self.rect.x:
