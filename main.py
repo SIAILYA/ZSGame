@@ -55,7 +55,7 @@ while running:
             if event.key == pygame.K_a:
                 left_move = True
 
-            if event.key == pygame.K_4:
+            if event.key == pygame.K_3:
                 zombie = Zombie(width * random(), height * 0.8)
                 all_sprites.add(zombie)
                 zombies.add(zombie)
