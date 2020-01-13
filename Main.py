@@ -1,7 +1,7 @@
 from Players import *
 import pygame
 from pygame import *
-from constantes import *
+from Constantes import *
 from random import random
 
 

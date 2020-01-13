@@ -1,6 +1,6 @@
 import pygame
 from math import atan, pi
-from constantes import *
+from Constantes import *
 import time
 
 clock = pygame.time.Clock()
