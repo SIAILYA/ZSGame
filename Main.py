@@ -1,36 +1,18 @@
-from Players import *
-import pygame
-from pygame import *
-from Constantes import *
 from random import random
 
+from pygame import *
 
-class Camera:
-    # зададим начальный сдвиг камеры
-    def __init__(self):
-        self.dx = 0
-        self.dy = 0
-
-    # сдвинуть объект obj на смещение камеры
-    def apply(self, obj):
-        obj.rect.x += self.dx
-        obj.rect.y += self.dy
-
-    # позиционировать камеру на объекте target
-    def update(self, target):
-        self.dx = -(target.rect.x + target.rect.w // 2 - width // 2)
-        self.dy = -(target.rect.y + target.rect.h // 2 - height // 2)
-
+from Configuration import Screen
+from Players import *
 
 pygame.init()
-size = width, height = 1366 // 2, 768 // 2
-screen = pygame.display.set_mode(size, pygame.RESIZABLE)
+screen = pygame.display.set_mode(Screen.size, pygame.RESIZABLE)
 pygame.display.set_caption('Zombie bombie')
 
-fon = pygame.transform.scale(pygame.image.load("images/fon.jpg"), size)
+fon = pygame.transform.scale(pygame.image.load("images/fon.jpg"), Screen.size)
 screen.blit(fon, (0, 0))
 
-hero = Hero(width * 0.5, height * 0.8)
+hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
 
 all_sprites = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
@@ -44,8 +26,6 @@ v = 100
 
 clock = pygame.time.Clock()
 
-camera = Camera()
-
 left_move = False
 right_move = False
 up_move = 10
@@ -54,11 +34,11 @@ down_move = 0
 
 all_sprites.add(hero)
 
-box1 = Box(width * 0.2, height * 0.8)
+box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
 all_sprites.add(box1)
 buildings.add(box1)
 
-box2 = Box(width * 0.8, hero.rect.y)
+box2 = Box(Screen.width * 0.8, hero.rect.y)
 all_sprites.add(box2)
 buildings.add(box2)
 
@@ -89,9 +69,9 @@ while running:
 
             if event.key == pygame.K_3:
                 if random() <= 0.5:
-                    zombie = Zombie(0, height * 0.8)
+                    zombie = Zombie(0, Screen.height * 0.8)
                 else:
-                    zombie = Zombie(width, height * 0.8)
+                    zombie = Zombie(Screen.width, Screen.height * 0.8)
                 all_sprites.add(zombie)
                 zombies.add(zombie)
 
