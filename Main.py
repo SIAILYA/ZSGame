@@ -4,6 +4,7 @@ from pygame import *
 
 from Configuration import Screen
 from Players import *
+from Screens import MenuScreen
 
 pygame.init()
 screen = pygame.display.set_mode(Screen.size, pygame.RESIZABLE)
@@ -18,9 +19,16 @@ all_sprites = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 zombies = pygame.sprite.Group()
 buildings = pygame.sprite.Group()
-
+menu = MenuScreen(screen)
+menu.render()
 pygame.display.flip()
-running = True
+
+enter_game = False
+
+while not enter_game:
+    menu.update()
+
+running = False
 flag = False
 v = 100
 
