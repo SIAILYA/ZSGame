@@ -16,18 +16,21 @@ class Button(pygame.sprite.Sprite):
 
 class MenuScreen:
     def __init__(self, screen: pygame.display):
+        self.buttons = pygame.sprite.Group()
         self.screen = screen
+        self.button_coords = []
 
     def render(self):
         fon = pygame.transform.scale(pygame.image.load("images/fon.jpg"), Screen.size)
         self.screen.blit(fon, (0, 0))
-        buttons = pygame.sprite.Group()
-        for button in [('ng_button.png', Screen.width // 2, 100 / Screen.divider),
-                       ('r_button.png', Screen.width // 2, 200 / Screen.divider),
-                       ('s_button.png', Screen.width // 2, 300 / Screen.divider)]:
+        for button in [('ng_button.png', Screen.width // 2, Screen.height * 0.1),
+                       ('r_button.png', Screen.width // 2, Screen.height * 0.26),
+                       ('s_button.png', Screen.width // 2, Screen.height * 0.42)]:
             sprite_button = Button(button[1], button[2], button[0])
-            buttons.add(sprite_button)
-        buttons.draw(self.screen)
+            self.buttons.add(sprite_button)
+            self.button_coords.append(button)
+        self.buttons.draw(self.screen)
 
-    def update(self):
+    def update(self, x, y):
         pygame.display.flip()
+

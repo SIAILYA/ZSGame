@@ -14,11 +14,13 @@ fon = pygame.transform.scale(pygame.image.load("images/fon.jpg"), Screen.size)
 screen.blit(fon, (0, 0))
 
 hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
-
 all_sprites = pygame.sprite.Group()
 bullets = pygame.sprite.Group()
 zombies = pygame.sprite.Group()
 buildings = pygame.sprite.Group()
+
+mouse_tap = pygame.sprite.Sprite()
+
 menu = MenuScreen(screen)
 menu.render()
 pygame.display.flip()
@@ -26,7 +28,15 @@ pygame.display.flip()
 enter_game = False
 
 while not enter_game:
-    menu.update()
+    menu.update(0, 0)
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            enter_game = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            x, y = event.pos
+
+            menu.buttons.update(x, y)
 
 running = False
 flag = False
@@ -59,6 +69,8 @@ while running:
             x, y = event.pos
             player_x, player_y = hero.rect.x, hero.rect.y
             bullet = Bullet(player_x, player_y, x, y)
+            if pygame.sprite.spritecollide(menu, mouse):
+                enter_game = True
             all_sprites.add(bullet)
             bullets.add(bullet)
 

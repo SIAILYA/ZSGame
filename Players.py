@@ -29,7 +29,7 @@ class Bullet(pygame.sprite.Sprite):
     def __init__(self, player_x, player_y, x, y, time=10):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("images/bullet.png")
-        self.image = pygame.transform.rotozoom(self.image, 0, hero_const * 0.8)
+        self.image = pygame.transform.rotozoom(self.image, 0, bullet_const)
         try:
             if x > player_x:
                 self.image = pygame.transform.rotate(self.image, 360 - atan((y - player_y) /
@@ -43,6 +43,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = player_y
         self.rect.x = player_x
         # TODO сделать одинаковую скорость пуль!
+        self.speed_x = 0
         if not self.speed_x:
             self.speed_x = (self.rect.x - x) / time
             self.speed_y = (self.rect.y - y) / time
@@ -56,7 +57,7 @@ class Zombie(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("images/zombie.gif")
-        self.image = pygame.transform.rotozoom(self.image, 0, hero_const * 0.1)
+        self.image = pygame.transform.rotozoom(self.image, 0, zombie_const)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
