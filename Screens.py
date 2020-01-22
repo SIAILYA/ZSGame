@@ -34,3 +34,8 @@ class MenuScreen:
     def update(self, x, y):
         pygame.display.flip()
 
+        if Screen.width * 0.4 <= x <= Screen.width * 0.6:
+            print(self.button_coords)
+            if y >= self.button_coords[2][2]:
+                print('das')
+

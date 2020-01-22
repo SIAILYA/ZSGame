@@ -28,7 +28,7 @@ pygame.display.flip()
 enter_game = False
 
 while not enter_game:
-    menu.update(0, 0)
+    menu.update(-1, -1)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             enter_game = True
@@ -36,7 +36,7 @@ while not enter_game:
         if event.type == pygame.MOUSEBUTTONDOWN:
             x, y = event.pos
 
-            menu.buttons.update(x, y)
+            menu.update(x, y)
 
 running = False
 flag = False
