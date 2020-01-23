@@ -6,7 +6,7 @@ from Сonstantes import *
 clock = pygame.time.Clock()
 
 pygame.init()
-hurt = pygame.mixer.Sound("hurt.wav")
+hurt = pygame.mixer.Sound("sounds/hurt.wav")
 
 
 class Hero(pygame.sprite.Sprite):

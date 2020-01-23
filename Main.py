@@ -13,7 +13,7 @@ screen = pygame.display.set_mode(Screen.size, pygame.RESIZABLE)
 background = pygame.transform.scale(pygame.image.load("images/backgrounds/background_start.jpg"), Screen.size)
 screen.blit(background, (0, 0))
 
-gun_shot = pygame.mixer.Sound("shot.wav")
+gun_shot = pygame.mixer.Sound("sounds/shot.wav")
 
 
 clock = pygame.time.Clock()
