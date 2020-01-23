@@ -4,6 +4,7 @@ from pygame import *
 
 from Configuration import Screen
 from Entities import *
+from Saves import load_settings, save
 from Screens import MenuScreen
 
 
@@ -11,22 +12,20 @@ pygame.init()
 pygame.display.set_caption('Zombie bombie')
 screen = pygame.display.set_mode(Screen.size, pygame.RESIZABLE)
 
-background = pygame.transform.scale(pygame.image.load("images/backgrounds/background_start.jpg"), Screen.size)
-screen.blit(background, (0, 0))
-
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 
 menu = MenuScreen(screen)
 menu.render(all_sprites)
 
+background = pygame.transform.scale(pygame.image.load("images/backgrounds/background_start.jpg"), Screen.size)
+screen.blit(background, (0, 0))
 cursor = Cursor(0, 0)
 all_sprites.add(cursor)
-
-
 pygame.display.flip()
 
 enter_game = False
+loaded = False
 
 while not enter_game:
     menu.update(-1, -1)
@@ -64,31 +63,32 @@ down_move = 0
 is_jump = False
 
 # ------Game sprite initialization-------
-background = pygame.transform.scale(pygame.image.load("images/backgrounds/background.jpg"), Screen.size)
-screen.blit(background, (0, 0))
+if not loaded:
+    background = pygame.transform.scale(pygame.image.load("images/backgrounds/background.jpg"), Screen.size)
+    screen.blit(background, (0, 0))
 
-bullets = pygame.sprite.Group()
-zombies = pygame.sprite.Group()
-buildings = pygame.sprite.Group()
-obstacles = pygame.sprite.Group()
+    bullets = pygame.sprite.Group()
+    zombies = pygame.sprite.Group()
+    buildings = pygame.sprite.Group()
+    obstacles = pygame.sprite.Group()
 
-floor = Floor()
-all_sprites.add(floor)
-obstacles.add(floor)
+    floor = Floor()
+    all_sprites.add(floor)
+    obstacles.add(floor)
 
-hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
-all_sprites.add(hero)
+    hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
+    all_sprites.add(hero)
 
-box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
-all_sprites.add(box1)
-buildings.add(box1)
+    box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
+    all_sprites.add(box1)
+    buildings.add(box1)
 
-box2 = Box(Screen.width * 0.8, hero.rect.y)
-all_sprites.add(box2)
-buildings.add(box2)
+    box2 = Box(Screen.width * 0.8, hero.rect.y)
+    all_sprites.add(box2)
+    buildings.add(box2)
 
-cursor.kill()
-all_sprites.add(cursor)
+    cursor.kill()
+    all_sprites.add(cursor)
 
 while running:
     for event in pygame.event.get():
