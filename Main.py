@@ -199,6 +199,7 @@ while running:
         zombies.add(zombie)
 
     # Добавление в кортеж координат гг
+    # Урааа
     hero_cords = hero.rect.x, hero.rect.y
     hero.update(left_move, right_move)
     zombies.update(hero_cords, bullets, buildings, screen, main_hero, zombies, all_sprites, hero)
