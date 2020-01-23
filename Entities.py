@@ -42,6 +42,7 @@ class Bullet(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load("images/entities/bullet.png")
         self.image = pygame.transform.rotozoom(self.image, 0, bullet_const)
+        # Наклон снаряда
         try:
             if x > player_x:
                 self.image = pygame.transform.rotate(self.image, 360 - atan((y - player_y) /
@@ -51,6 +52,7 @@ class Bullet(pygame.sprite.Sprite):
                                                                             (x - player_x)) * 180 / pi)
         except ZeroDivisionError:
             self.image = pygame.transform.rotate(self.image, 90)
+
         self.rect = self.image.get_rect()
         self.rect.y = player_y
         self.rect.x = player_x
@@ -59,11 +61,13 @@ class Bullet(pygame.sprite.Sprite):
             self.speed_x = (self.rect.x - x) / time
             self.speed_y = (self.rect.y - y) / time
 
+    # Изменение координаты
     def update(self, *args):
         self.rect.x -= self.speed_x
         self.rect.y -= self.speed_y
 
 
+# Класс зомби
 class Zombie(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -76,11 +80,14 @@ class Zombie(pygame.sprite.Sprite):
         self.image = self.main
 
     def update(self, hero_cords, bullets, buildings, screen, hero, zombies, all_sprites, main_hero):
+        # Следование за героем
         if not pygame.sprite.spritecollide(self, buildings, False):
             if hero_cords[0] > self.rect.x:
                 self.rect.x += 1
             else:
                 self.rect.x -= 1
+
+        # Получение урона
         if pygame.sprite.spritecollide(self, bullets, True):
             self.hp -= 1
             hurt.play()
@@ -93,11 +100,13 @@ class Zombie(pygame.sprite.Sprite):
                 self.rect = self.image.get_rect()
                 self.kill()
 
+        # Урон коробкам
         if pygame.sprite.spritecollideany(self, buildings):
             pygame.sprite.spritecollideany(self, buildings).hp -= 1
             if pygame.sprite.spritecollideany(self, buildings).hp == 0:
                 pygame.sprite.spritecollideany(self, buildings).kill()
 
+        # Урон главному герою
         if pygame.sprite.spritecollideany(self, hero):
             pygame.sprite.spritecollideany(self, hero).hp -= 1
             if pygame.sprite.spritecollideany(self, hero).hp == 0:
@@ -107,6 +116,7 @@ class Zombie(pygame.sprite.Sprite):
                 screen.blit(text, (Screen.width * 0.4, Screen.height * 0.2))
 
 
+# Класс коробки
 class Box(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -118,12 +128,14 @@ class Box(pygame.sprite.Sprite):
         self.rect.y = y
         self.hp = 5000
 
+    # Изменение надписи хп
     def update(self, screen, zombies):
         font = pygame.font.Font(None, 50)
         text = font.render(str(self.hp // 100), 1, (100, 255, 100))
         screen.blit(text, (self.rect.x, self.rect.y))
 
 
+# Класс пола
 class Floor(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -135,6 +147,7 @@ class Floor(pygame.sprite.Sprite):
         self.rect.y = Screen.height - self.rect.height
 
 
+# Класс мышки, вместе с прицелом
 class Cursor(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.mouse.set_visible(False)

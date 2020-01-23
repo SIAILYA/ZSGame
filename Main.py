@@ -7,16 +7,19 @@ from Entities import *
 from Saves import save, load_settings
 from Screens import MenuScreen
 
+# Инициализация пигейма
 pygame.init()
 pygame.display.set_caption('Zombie bombie')
 screen = pygame.display.set_mode(Screen.size, pygame.RESIZABLE)
 
+# Создание фона
 background = pygame.transform.scale(pygame.image.load("images/backgrounds/background_start.jpg"), Screen.size)
 screen.blit(background, (0, 0))
 
+# Загрузка звука выстрела
 gun_shot = pygame.mixer.Sound("sounds/shot.wav")
 
-
+# Объявление глобальных переменных
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
 
@@ -34,6 +37,7 @@ pygame.display.flip()
 
 enter_game = False
 
+# Меню игры
 while not enter_game:
     menu.update(-1, -1)
     for event in pygame.event.get():
@@ -50,6 +54,7 @@ while not enter_game:
             elif menu.check_press(cursor) == 'resume':
                 enter_game = True
                 running = True
+                # Загрузка статистики
                 hero.score, box1.hp, box2.hp = load_settings()
                 menu.enter_game()
             elif menu.check_press(cursor) == 'settings':
@@ -63,6 +68,7 @@ while not enter_game:
     screen.blit(background, (0, 0))
     all_sprites.draw(screen)
     pygame.display.flip()
+    # Выставление фпс
     clock.tick(120)
 
 flag = False
@@ -76,20 +82,23 @@ is_jump = False
 background = pygame.transform.scale(pygame.image.load("images/backgrounds/background.jpg"), Screen.size)
 screen.blit(background, (0, 0))
 
+# Объявление шрифта
 font = pygame.font.Font(None, 40)
 text = font.render(str(score), 1, (255, 255, 255))
 screen.blit(text, (Screen.width * 0.2, Screen.height * 0.2))
 
+# Создание групп под спрайты
 bullets = pygame.sprite.Group()
 zombies = pygame.sprite.Group()
 buildings = pygame.sprite.Group()
 obstacles = pygame.sprite.Group()
+main_hero = pygame.sprite.Group()
 
+# Создание спрайтов и добавление их в группы
 floor = Floor()
 all_sprites.add(floor)
 obstacles.add(floor)
 
-main_hero = pygame.sprite.Group()
 main_hero.add(hero)
 all_sprites.add(hero)
 
@@ -102,6 +111,7 @@ buildings.add(box2)
 cursor.kill()
 all_sprites.add(cursor)
 
+# Время кулдауна
 last_time_ms = int(round(time.time() * 1000))
 
 while running:
