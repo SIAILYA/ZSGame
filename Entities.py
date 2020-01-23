@@ -9,6 +9,22 @@ pygame.init()
 hurt = pygame.mixer.Sound("sounds/hurt.wav")
 
 
+# Класс мышки, вместе с прицелом
+class Cursor(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.mouse.set_visible(False)
+        pygame.sprite.Sprite.__init__(self)
+        cursor_pic = pygame.image.load("images/entities/cursor.png")
+        cursor_pic = pygame.transform.rotozoom(cursor_pic, 0, 0.5)
+        self.image = cursor_pic
+        self.rect = cursor_pic.get_rect()
+        self.rect.x = x - self.rect.width // 2
+        self.rect.y = y - self.rect.height // 2
+
+    def update(self, x, y):
+        self.rect.x = x - self.rect.width // 2
+        self.rect.y = y - self.rect.height // 2
+
 # Основной класс героя
 class Hero(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -18,13 +34,17 @@ class Hero(pygame.sprite.Sprite):
         self.hero_pic_l = pygame.transform.flip(self.hero_pic, 1, 0)
         self.image = self.hero_pic
         self.rect = hero_pic.get_rect()
+
         self.rect.x = x
         self.rect.y = y
         self.speed_x = 0
+
         # Направление ходьбы
         self.direction = 0
-        self.score = 0   # Очки героя, счет
-        self.hp = 1000  # Здоровье героя
+        # Очки героя, счет
+        self.score = 0
+        # Здоровье героя
+        self.hp = 1000
 
     # Ходьба героя
     def update(self, left_move=None, right_move=None):
@@ -58,6 +78,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = player_y
         self.rect.x = player_x
         self.speed_x = 0
+
         if not self.speed_x:
             self.speed_x = (self.rect.x - x) / time
             self.speed_y = (self.rect.y - y) / time
@@ -75,6 +96,7 @@ class Zombie(pygame.sprite.Sprite):
         self.main = pygame.image.load("images/entities/zombie.gif")
         self.main = pygame.transform.rotozoom(self.main, 0, Screen.width / 1366 / 3.5)
         self.rect = self.main.get_rect()
+
         self.rect.x = x
         self.rect.y = y
         self.hp = 4
@@ -95,6 +117,7 @@ class Zombie(pygame.sprite.Sprite):
             damaged = pygame.transform.rotozoom(pygame.image.load(f"images/entities/zombie_damaged{4 - self.hp}.png"),
                                                 0, Screen.width / 1366 / 3.5)
             self.image = damaged
+
             if self.hp == 0:
                 main_hero.score += 5
                 self.image = pygame.transform.rotate(self.image, 90)
@@ -148,8 +171,8 @@ class Floor(pygame.sprite.Sprite):
         self.rect.y = Screen.height - self.rect.height
 
 
-# Класс мышки, вместе с прицелом
-class Cursor(pygame.sprite.Sprite):
+# Класс прицела
+class Crosshair(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.mouse.set_visible(False)
         pygame.sprite.Sprite.__init__(self)
@@ -163,3 +186,21 @@ class Cursor(pygame.sprite.Sprite):
     def update(self, x, y):
         self.rect.x = x - self.rect.width // 2
         self.rect.y = y - self.rect.height // 2
+
+
+class NewBox(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        pygame.sprite.Sprite.__init__(self)
+        box_pic = pygame.image.load("images/entities/box.png")
+        box_pic = pygame.transform.rotozoom(box_pic, 0, 0.2 / Screen.divider)
+        self.image = box_pic
+        self.rect = box_pic.get_rect()
+        self.rect.x = x - self.rect.width // 2
+        self.rect.y = y
+        self.hp = 5000
+
+    # Изменение надписи хп
+    def update(self, screen, zombies):
+        font = pygame.font.Font(None, 50)
+        text = font.render(str(self.hp // 100), 1, (100, 255, 100))
+        screen.blit(text, (self.rect.x, self.rect.y))
