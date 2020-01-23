@@ -23,11 +23,12 @@ class Hero(pygame.sprite.Sprite):
         self.speed_x = 0
         # Направление ходьбы
         self.direction = 0
-        self.score = 0
-        self.hp = 1000
+        self.score = 0   # Очки героя, счет
+        self.hp = 1000  # Здоровье героя
 
     # Ходьба героя
     def update(self, left_move=None, right_move=None):
+        # Передвижение героя и изменения направления спрайта
         if left_move:
             self.rect.x -= 2
             self.image = self.hero_pic_l
