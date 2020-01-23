@@ -9,6 +9,7 @@ pygame.init()
 hurt = pygame.mixer.Sound("sounds/hurt.wav")
 
 
+# Основной класс героя
 class Hero(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -20,10 +21,12 @@ class Hero(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speed_x = 0
+        # Направление ходьбы
         self.direction = 0
-        self.score = 800
+        self.score = 0
         self.hp = 1000
 
+    # Ходьба героя
     def update(self, left_move=None, right_move=None):
         if left_move:
             self.rect.x -= 2
@@ -33,6 +36,7 @@ class Hero(pygame.sprite.Sprite):
             self.image = self.hero_pic
 
 
+# Класс снаряда
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, player_x, player_y, x, y, time=10):
         pygame.sprite.Sprite.__init__(self)
@@ -50,7 +54,6 @@ class Bullet(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.y = player_y
         self.rect.x = player_x
-        # TODO сделать одинаковую скорость пуль!
         self.speed_x = 0
         if not self.speed_x:
             self.speed_x = (self.rect.x - x) / time
