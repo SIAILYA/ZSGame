@@ -5,6 +5,7 @@ from pygame import font
 
 class Button(pygame.sprite.Sprite):
     # ------Класс, описывающий кнопку------
+    # Используется для отрисовки кнопок в главном меню
     def __init__(self, x, y, picture, function):
         pygame.sprite.Sprite.__init__(self)
         sprite_pic = pygame.image.load(f"images/buttons/{picture}")
@@ -13,19 +14,21 @@ class Button(pygame.sprite.Sprite):
         self.rect = sprite_pic.get_rect()
         self.rect.x = x - self.rect.width // 2
         self.rect.y = y
-        self.hp = 5000
         self.function = function
 
 
 class MenuScreen:
+    # ОСновной экран с главным меню
     def __init__(self, screen: pygame.display):
         self.buttons = pygame.sprite.Group()
         self.screen = screen
         self.button_coords = []
 
     def render(self, all_sprites):
+        # Метод отрисовки главного экрана
         fon = pygame.transform.scale(pygame.image.load("images/backgrounds/background_start.jpg"), Screen.size)
         self.screen.blit(fon, (0, 0))
+        # Отрисовка кнопок:
         for button in [('ng_button.png', Screen.width // 2, Screen.height * 0.1, 'new_game'),
                        ('r_button.png', Screen.width // 2, Screen.height * 0.26, 'resume'),
                        # ('s_button.png', Screen.width // 2, Screen.height * 0.42, 'settings'),
@@ -37,6 +40,7 @@ class MenuScreen:
         self.buttons.draw(self.screen)
 
     def enter_game(self):
+        # Метод для уничтожения кнопок и вхожа в игру
         for button in self.buttons:
             button.kill()
 
@@ -48,6 +52,8 @@ class MenuScreen:
                 print('das')
 
     def check_press(self, cursor):
+        # Метод проверки нажатия на одну из кнопок, используется для входа
+        # и выхода из игры
         if pygame.sprite.spritecollide(cursor, self.buttons, False):
             return pygame.sprite.spritecollide(cursor, self.buttons, False)[0].function
         return None
