@@ -25,11 +25,14 @@ all_sprites = pygame.sprite.Group()
 
 menu = MenuScreen(screen)
 menu.render(all_sprites)
-hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
-box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
-box2 = Box(Screen.width * 0.8, Screen.height * 0.8)
+
 cursor = Cursor(0, 0)
 all_sprites.add(cursor)
+
+hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
+
+box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
+box2 = Box(Screen.width * 0.8, Screen.height * 0.8)
 
 score = 0
 
@@ -40,6 +43,7 @@ enter_game = False
 # Меню игры
 while not enter_game:
     menu.update(-1, -1)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             enter_game = True
@@ -51,14 +55,17 @@ while not enter_game:
                 enter_game = True
                 running = True
                 menu.enter_game()
+
             elif menu.check_press(cursor) == 'resume':
                 enter_game = True
                 running = True
                 # Загрузка статистики
                 hero.score, box1.hp, box2.hp = load_settings()
                 menu.enter_game()
+
             elif menu.check_press(cursor) == 'settings':
                 pass
+
             elif menu.check_press(cursor) == 'exit':
                 raise SystemExit
 
@@ -68,6 +75,7 @@ while not enter_game:
     screen.blit(background, (0, 0))
     all_sprites.draw(screen)
     pygame.display.flip()
+
     # Выставление фпс
     clock.tick(120)
 
