@@ -151,12 +151,13 @@ while running:
 
             if event.key == pygame.K_3:
                 # Создание зомби в разных сторонах
-                if random() <= 0.5:
-                    zombie = Zombie(0, Screen.height * 0.8)
-                else:
-                    zombie = Zombie(Screen.width, Screen.height * 0.8)
-                all_sprites.add(zombie)
-                zombies.add(zombie)
+                if hero.score < 1000:
+                    if random() <= 0.5:
+                        zombie = Zombie(0, Screen.height * 0.8)
+                    else:
+                        zombie = Zombie(Screen.width, Screen.height * 0.8)
+                    all_sprites.add(zombie)
+                    zombies.add(zombie)
 
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_w:
@@ -187,7 +188,7 @@ while running:
     # Проверка времени
     diff_time_ms = int(round(time.time() * 1000)) - last_time_ms
 
-    if diff_time_ms >= 1200000 / (hero.score + 200):
+    if diff_time_ms >= 1200000 / (hero.score + 200) and hero.score < 1000:
         last_time_ms = int(round(time.time() * 1000))
         if random() <= 0.5:
             zombie = Zombie(0, Screen.height * 0.8)
@@ -210,6 +211,11 @@ while running:
     # Объявление счёта
     text = font.render("Score:" + " " + str(hero.score), 1, (255, 0, 0))
     screen.blit(text, (Screen.width * 0.02, Screen.height * 0.02))
+    # Победа
+    if hero.score >= 1000:
+        background = pygame.transform.scale(pygame.image.load("images/backgrounds/background_win.jpg"), Screen.size)
+        screen.blit(background, (0, 0))
+        zombies.empty()
     pygame.display.flip()
     clock.tick(230)
 

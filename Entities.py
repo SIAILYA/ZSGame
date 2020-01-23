@@ -25,6 +25,7 @@ class Cursor(pygame.sprite.Sprite):
         self.rect.x = x - self.rect.width // 2
         self.rect.y = y - self.rect.height // 2
 
+
 # Основной класс героя
 class Hero(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -42,7 +43,7 @@ class Hero(pygame.sprite.Sprite):
         # Направление ходьбы
         self.direction = 0
         # Очки героя, счет
-        self.score = 0
+        self.score = 996
         # Здоровье героя
         self.hp = 1000
 
