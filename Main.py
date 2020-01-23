@@ -1,7 +1,7 @@
 from random import random
 
 from pygame import *
-
+import time
 from Configuration import Screen
 from Entities import *
 from Screens import MenuScreen
@@ -100,6 +100,8 @@ buildings.add(box2)
 cursor.kill()
 all_sprites.add(cursor)
 
+last_time_ms = int(round(time.time() * 1000))
+
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -157,9 +159,21 @@ while running:
             hero.rect.y -= 3
             up_move = 9
 
+    diff_time_ms = int(round(time.time() * 1000)) - last_time_ms
+
+    if diff_time_ms >= 1200000 / (hero.score + 200):
+        last_time_ms = int(round(time.time() * 1000))
+        if random() <= 0.5:
+            zombie = Zombie(0, Screen.height * 0.8)
+        else:
+            zombie = Zombie(Screen.width, Screen.height * 0.8)
+
+        all_sprites.add(zombie)
+        zombies.add(zombie)
+
     hero_cords = hero.rect.x, hero.rect.y
     hero.update(left_move, right_move)
-    zombies.update(hero_cords, bullets, buildings, screen, main_hero, zombies)
+    zombies.update(hero_cords, bullets, buildings, screen, main_hero, zombies, all_sprites, hero)
 
     bullets.update()
 

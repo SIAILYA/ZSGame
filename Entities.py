@@ -21,7 +21,7 @@ class Hero(pygame.sprite.Sprite):
         self.rect.y = y
         self.speed_x = 0
         self.direction = 0
-        self.score = 0
+        self.score = 800
         self.hp = 1000
 
     def update(self, left_move=None, right_move=None):
@@ -72,7 +72,7 @@ class Zombie(pygame.sprite.Sprite):
         self.hp = 4
         self.image = self.main
 
-    def update(self, hero_cords, bullets, buildings, screen, hero, zombies):
+    def update(self, hero_cords, bullets, buildings, screen, hero, zombies, all_sprites, main_hero):
         if not pygame.sprite.spritecollide(self, buildings, False):
             if hero_cords[0] > self.rect.x:
                 self.rect.x += 1
@@ -85,7 +85,7 @@ class Zombie(pygame.sprite.Sprite):
                                                 0, Screen.width / 1366 / 3.5)
             self.image = damaged
             if self.hp == 0:
-                hero.score += 5
+                main_hero.score += 5
                 self.image = pygame.transform.rotate(self.image, 90)
                 self.rect = self.image.get_rect()
                 self.kill()
