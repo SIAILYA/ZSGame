@@ -10,7 +10,6 @@ def save(parameters):
 def load_settings():
     try:
         with open('saves/save.zs', 'rb') as game_save:
-            game_save.close()
             return load(game_save)
     except FileNotFoundError:
         return False

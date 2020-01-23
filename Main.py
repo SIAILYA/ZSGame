@@ -4,6 +4,7 @@ from pygame import *
 import time
 from Configuration import Screen
 from Entities import *
+from Saves import save, load_settings
 from Screens import MenuScreen
 
 pygame.init()
@@ -21,7 +22,9 @@ all_sprites = pygame.sprite.Group()
 
 menu = MenuScreen(screen)
 menu.render(all_sprites)
-
+hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
+box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
+box2 = Box(Screen.width * 0.8, Screen.height * 0.8)
 cursor = Cursor(0, 0)
 all_sprites.add(cursor)
 
@@ -46,6 +49,8 @@ while not enter_game:
                 menu.enter_game()
             elif menu.check_press(cursor) == 'resume':
                 enter_game = True
+                running = True
+                hero.score, box1.hp, box2.hp = load_settings()
                 menu.enter_game()
             elif menu.check_press(cursor) == 'settings':
                 pass
@@ -84,16 +89,13 @@ floor = Floor()
 all_sprites.add(floor)
 obstacles.add(floor)
 
-hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
 main_hero = pygame.sprite.Group()
 main_hero.add(hero)
 all_sprites.add(hero)
 
-box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
 all_sprites.add(box1)
 buildings.add(box1)
 
-box2 = Box(Screen.width * 0.8, Screen.height * 0.8)
 all_sprites.add(box2)
 buildings.add(box2)
 
@@ -105,6 +107,7 @@ last_time_ms = int(round(time.time() * 1000))
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            save([hero.score, box1.hp, box2.hp])
             running = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:

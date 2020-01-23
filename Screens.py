@@ -4,6 +4,7 @@ from pygame import font
 
 
 class Button(pygame.sprite.Sprite):
+    # ------Класс, описывающий кнопку------
     def __init__(self, x, y, picture, function):
         pygame.sprite.Sprite.__init__(self)
         sprite_pic = pygame.image.load(f"images/buttons/{picture}")
