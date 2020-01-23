@@ -6,14 +6,15 @@ from Configuration import Screen
 from Entities import *
 from Screens import MenuScreen
 
-# gun_shot = pygame.mixer.music.load()
-
 pygame.init()
 pygame.display.set_caption('Zombie bombie')
 screen = pygame.display.set_mode(Screen.size, pygame.RESIZABLE)
 
 background = pygame.transform.scale(pygame.image.load("images/backgrounds/background_start.jpg"), Screen.size)
 screen.blit(background, (0, 0))
+
+gun_shot = pygame.mixer.Sound("shot.wav")
+
 
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
@@ -84,6 +85,8 @@ all_sprites.add(floor)
 obstacles.add(floor)
 
 hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
+main_hero = pygame.sprite.Group()
+main_hero.add(hero)
 all_sprites.add(hero)
 
 box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
@@ -103,8 +106,9 @@ while running:
             running = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            if pygame.mouse.get_pressed()[0]:
+            if pygame.mouse.get_pressed()[0] and hero:
                 x, y = event.pos
+                gun_shot.play()
                 player_x, player_y = hero.rect.x, hero.rect.y
                 bullet = Bullet(player_x, player_y, x, y)
                 all_sprites.add(bullet)
@@ -155,12 +159,13 @@ while running:
 
     hero_cords = hero.rect.x, hero.rect.y
     hero.update(left_move, right_move)
-    zombies.update(hero_cords, bullets, buildings, screen, hero)
-    buildings.update(screen, zombies)
+    zombies.update(hero_cords, bullets, buildings, screen, main_hero, zombies)
+
     bullets.update()
 
     screen.blit(background, (0, 0))
     all_sprites.draw(screen)
+    buildings.update(screen, zombies)
     text = font.render("Score:" + " " + str(hero.score), 1, (255, 0, 0))
     screen.blit(text, (Screen.width * 0.02, Screen.height * 0.02))
     pygame.display.flip()

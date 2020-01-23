@@ -5,6 +5,9 @@ from Configuration import Screen
 from Сonstantes import *
 clock = pygame.time.Clock()
 
+pygame.init()
+hurt = pygame.mixer.Sound("hurt.wav")
+
 
 class Hero(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -19,6 +22,7 @@ class Hero(pygame.sprite.Sprite):
         self.speed_x = 0
         self.direction = 0
         self.score = 0
+        self.hp = 1000
 
     def update(self, left_move=None, right_move=None):
         if left_move:
@@ -68,7 +72,7 @@ class Zombie(pygame.sprite.Sprite):
         self.hp = 4
         self.image = self.main
 
-    def update(self, hero_cords, bullets, buildings, screen, hero):
+    def update(self, hero_cords, bullets, buildings, screen, hero, zombies):
         if not pygame.sprite.spritecollide(self, buildings, False):
             if hero_cords[0] > self.rect.x:
                 self.rect.x += 1
@@ -76,6 +80,7 @@ class Zombie(pygame.sprite.Sprite):
                 self.rect.x -= 1
         if pygame.sprite.spritecollide(self, bullets, True):
             self.hp -= 1
+            hurt.play()
             damaged = pygame.transform.rotozoom(pygame.image.load(f"images/entities/zombie_damaged{4 - self.hp}.png"),
                                                 0, Screen.width / 1366 / 3.5)
             self.image = damaged
@@ -84,6 +89,19 @@ class Zombie(pygame.sprite.Sprite):
                 self.image = pygame.transform.rotate(self.image, 90)
                 self.rect = self.image.get_rect()
                 self.kill()
+
+        if pygame.sprite.spritecollideany(self, buildings):
+            pygame.sprite.spritecollideany(self, buildings).hp -= 1
+            if pygame.sprite.spritecollideany(self, buildings).hp == 0:
+                pygame.sprite.spritecollideany(self, buildings).kill()
+
+        if pygame.sprite.spritecollideany(self, hero):
+            pygame.sprite.spritecollideany(self, hero).hp -= 1
+            if pygame.sprite.spritecollideany(self, hero).hp == 0:
+                pygame.sprite.spritecollideany(self, hero).kill()
+                font = pygame.font.Font(None, 100)
+                text = font.render("You died", 1, (100, 255, 100))
+                screen.blit(text, (Screen.width * 0.4, Screen.height * 0.2))
 
 
 class Box(pygame.sprite.Sprite):
@@ -101,10 +119,6 @@ class Box(pygame.sprite.Sprite):
         font = pygame.font.Font(None, 50)
         text = font.render(str(self.hp // 100), 1, (100, 255, 100))
         screen.blit(text, (self.rect.x, self.rect.y))
-        if pygame.sprite.spritecollide(self, zombies, False):
-            self.hp -= 1
-            if self.hp == 0:
-                self.kill()
 
 
 class Floor(pygame.sprite.Sprite):
