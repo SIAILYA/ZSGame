@@ -1,5 +1,6 @@
 import pygame
 from Configuration import Screen
+from pygame import font
 
 
 class Button(pygame.sprite.Sprite):

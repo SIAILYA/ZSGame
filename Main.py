@@ -4,13 +4,16 @@ from pygame import *
 
 from Configuration import Screen
 from Entities import *
-from Saves import load_settings, save
 from Screens import MenuScreen
 
+# gun_shot = pygame.mixer.music.load()
 
 pygame.init()
 pygame.display.set_caption('Zombie bombie')
 screen = pygame.display.set_mode(Screen.size, pygame.RESIZABLE)
+
+background = pygame.transform.scale(pygame.image.load("images/backgrounds/background_start.jpg"), Screen.size)
+screen.blit(background, (0, 0))
 
 clock = pygame.time.Clock()
 all_sprites = pygame.sprite.Group()
@@ -18,25 +21,27 @@ all_sprites = pygame.sprite.Group()
 menu = MenuScreen(screen)
 menu.render(all_sprites)
 
-background = pygame.transform.scale(pygame.image.load("images/backgrounds/background_start.jpg"), Screen.size)
-screen.blit(background, (0, 0))
 cursor = Cursor(0, 0)
 all_sprites.add(cursor)
+
+score = 0
+
 pygame.display.flip()
 
 enter_game = False
-loaded = False
 
 while not enter_game:
     menu.update(-1, -1)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             enter_game = True
+            running = False
             menu.enter_game()
 
         if event.type == pygame.MOUSEBUTTONUP:
             if menu.check_press(cursor) == 'new_game':
                 enter_game = True
+                running = True
                 menu.enter_game()
             elif menu.check_press(cursor) == 'resume':
                 enter_game = True
@@ -52,9 +57,8 @@ while not enter_game:
     screen.blit(background, (0, 0))
     all_sprites.draw(screen)
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(120)
 
-running = True
 flag = False
 left_move = False
 right_move = False
@@ -63,32 +67,35 @@ down_move = 0
 is_jump = False
 
 # ------Game sprite initialization-------
-if not loaded:
-    background = pygame.transform.scale(pygame.image.load("images/backgrounds/background.jpg"), Screen.size)
-    screen.blit(background, (0, 0))
+background = pygame.transform.scale(pygame.image.load("images/backgrounds/background.jpg"), Screen.size)
+screen.blit(background, (0, 0))
 
-    bullets = pygame.sprite.Group()
-    zombies = pygame.sprite.Group()
-    buildings = pygame.sprite.Group()
-    obstacles = pygame.sprite.Group()
+font = pygame.font.Font(None, 40)
+text = font.render(str(score), 1, (255, 255, 255))
+screen.blit(text, (Screen.width * 0.2, Screen.height * 0.2))
 
-    floor = Floor()
-    all_sprites.add(floor)
-    obstacles.add(floor)
+bullets = pygame.sprite.Group()
+zombies = pygame.sprite.Group()
+buildings = pygame.sprite.Group()
+obstacles = pygame.sprite.Group()
 
-    hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
-    all_sprites.add(hero)
+floor = Floor()
+all_sprites.add(floor)
+obstacles.add(floor)
 
-    box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
-    all_sprites.add(box1)
-    buildings.add(box1)
+hero = Hero(Screen.width * 0.5, Screen.height * 0.8)
+all_sprites.add(hero)
 
-    box2 = Box(Screen.width * 0.8, hero.rect.y)
-    all_sprites.add(box2)
-    buildings.add(box2)
+box1 = Box(Screen.width * 0.2, Screen.height * 0.8)
+all_sprites.add(box1)
+buildings.add(box1)
 
-    cursor.kill()
-    all_sprites.add(cursor)
+box2 = Box(Screen.width * 0.8, Screen.height * 0.8)
+all_sprites.add(box2)
+buildings.add(box2)
+
+cursor.kill()
+all_sprites.add(cursor)
 
 while running:
     for event in pygame.event.get():
@@ -96,11 +103,12 @@ while running:
             running = False
 
         if event.type == pygame.MOUSEBUTTONDOWN:
-            x, y = event.pos
-            player_x, player_y = hero.rect.x, hero.rect.y
-            bullet = Bullet(player_x, player_y, x, y)
-            all_sprites.add(bullet)
-            bullets.add(bullet)
+            if pygame.mouse.get_pressed()[0]:
+                x, y = event.pos
+                player_x, player_y = hero.rect.x, hero.rect.y
+                bullet = Bullet(player_x, player_y, x, y)
+                all_sprites.add(bullet)
+                bullets.add(bullet)
 
         if event.type == pygame.MOUSEBUTTONUP:
             flag = False
@@ -147,14 +155,15 @@ while running:
 
     hero_cords = hero.rect.x, hero.rect.y
     hero.update(left_move, right_move)
-    zombies.update(hero_cords, bullets, buildings)
+    zombies.update(hero_cords, bullets, buildings, screen, hero)
     buildings.update(screen, zombies)
     bullets.update()
 
     screen.blit(background, (0, 0))
     all_sprites.draw(screen)
-
+    text = font.render("Score:" + " " + str(hero.score), 1, (255, 0, 0))
+    screen.blit(text, (Screen.width * 0.02, Screen.height * 0.02))
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(230)
 
 pygame.quit()

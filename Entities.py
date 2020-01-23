@@ -1,10 +1,8 @@
 import pygame
 from math import atan, pi
 import time
-
-import Configuration
+from Configuration import Screen
 from Сonstantes import *
-
 clock = pygame.time.Clock()
 
 
@@ -20,6 +18,7 @@ class Hero(pygame.sprite.Sprite):
         self.rect.y = y
         self.speed_x = 0
         self.direction = 0
+        self.score = 0
 
     def update(self, left_move=None, right_move=None):
         if left_move:
@@ -62,14 +61,14 @@ class Zombie(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         self.main = pygame.image.load("images/entities/zombie.gif")
-        self.main = pygame.transform.rotozoom(self.main, 0, zombie_const)
+        self.main = pygame.transform.rotozoom(self.main, 0, Screen.width / 1366 / 3.5)
         self.rect = self.main.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.hp = 4
         self.image = self.main
 
-    def update(self, hero_cords, bullets, buildings):
+    def update(self, hero_cords, bullets, buildings, screen, hero):
         if not pygame.sprite.spritecollide(self, buildings, False):
             if hero_cords[0] > self.rect.x:
                 self.rect.x += 1
@@ -77,9 +76,11 @@ class Zombie(pygame.sprite.Sprite):
                 self.rect.x -= 1
         if pygame.sprite.spritecollide(self, bullets, True):
             self.hp -= 1
-            damaged = pygame.transform.rotozoom(pygame.image.load(f"images/entities/zombie_damaged{4 - self.hp}.png"), 0, zombie_const)
+            damaged = pygame.transform.rotozoom(pygame.image.load(f"images/entities/zombie_damaged{4 - self.hp}.png"),
+                                                0, Screen.width / 1366 / 3.5)
             self.image = damaged
             if self.hp == 0:
+                hero.score += 5
                 self.image = pygame.transform.rotate(self.image, 90)
                 self.rect = self.image.get_rect()
                 self.kill()
@@ -89,7 +90,7 @@ class Box(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
         box_pic = pygame.image.load("images/entities/box.png")
-        box_pic = pygame.transform.rotozoom(box_pic, 0, 0.2)
+        box_pic = pygame.transform.rotozoom(box_pic, 0, 0.2 / Screen.divider)
         self.image = box_pic
         self.rect = box_pic.get_rect()
         self.rect.x = x - self.rect.width // 2
@@ -110,11 +111,11 @@ class Floor(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
         floor_pic = pygame.image.load("images/backgrounds/floor.png")
-        floor_pic = pygame.transform.rotozoom(floor_pic, 0, 1 / Configuration.Screen.divider)
+        floor_pic = pygame.transform.rotozoom(floor_pic, 0, 1 / Screen.divider)
         self.image = floor_pic
         self.rect = floor_pic.get_rect()
         self.rect.x = 0
-        self.rect.y = Configuration.Screen.height - self.rect.height
+        self.rect.y = Screen.height - self.rect.height
 
 
 class Cursor(pygame.sprite.Sprite):
