@@ -117,9 +117,11 @@ last_time_ms = int(round(time.time() * 1000))
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
+            # Сохранение статистики
             save([hero.score, box1.hp, box2.hp])
             running = False
 
+        # Выстрел, создание снаряда
         if event.type == pygame.MOUSEBUTTONDOWN:
             if pygame.mouse.get_pressed()[0] and hero:
                 x, y = event.pos
@@ -140,6 +142,7 @@ while running:
                 left_move = True
 
             if event.key == pygame.K_3:
+                # Создание зомби в разных сторонах
                 if random() <= 0.5:
                     zombie = Zombie(0, Screen.height * 0.8)
                 else:
@@ -160,6 +163,7 @@ while running:
         if event.type == pygame.MOUSEMOTION:
             cursor.update(event.pos[0], event.pos[1])
 
+    # Функция прыжка
     if is_jump:
         if up_move >= -10:
             neg = 0.9
@@ -172,6 +176,7 @@ while running:
             hero.rect.y -= 3
             up_move = 9
 
+    # Проверка времени
     diff_time_ms = int(round(time.time() * 1000)) - last_time_ms
 
     if diff_time_ms >= 1200000 / (hero.score + 200):
@@ -184,6 +189,7 @@ while running:
         all_sprites.add(zombie)
         zombies.add(zombie)
 
+    # Добавление в кортеж координат гг
     hero_cords = hero.rect.x, hero.rect.y
     hero.update(left_move, right_move)
     zombies.update(hero_cords, bullets, buildings, screen, main_hero, zombies, all_sprites, hero)
@@ -193,6 +199,7 @@ while running:
     screen.blit(background, (0, 0))
     all_sprites.draw(screen)
     buildings.update(screen, zombies)
+    # Объявление счёта
     text = font.render("Score:" + " " + str(hero.score), 1, (255, 0, 0))
     screen.blit(text, (Screen.width * 0.02, Screen.height * 0.02))
     pygame.display.flip()
