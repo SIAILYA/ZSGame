@@ -176,9 +176,11 @@ class Crosshair(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.mouse.set_visible(False)
         pygame.sprite.Sprite.__init__(self)
+
         cursor_pic = pygame.image.load("images/entities/cursor.png")
         cursor_pic = pygame.transform.rotozoom(cursor_pic, 0, 0.5)
         self.image = cursor_pic
+
         self.rect = cursor_pic.get_rect()
         self.rect.x = x - self.rect.width // 2
         self.rect.y = y - self.rect.height // 2
